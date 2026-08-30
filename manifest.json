@@ -1,7 +1,7 @@
 {
   "name": "Padisah: Elciler",
   "short_name": "Padisah",
-  "start_url": "index.html",
+  "start_url": "index.html?v=2",
   "display": "fullscreen",
   "orientation": "landscape",
   "background_color": "#000000",

@@ -12,7 +12,7 @@
     <title>Padişah: Elçiler</title>
     <!-- Use font-display: swap for performance -->
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
@@ -30,15 +30,15 @@
     <div id="scene-container">
         <div id="scene-image">
             <div id="particle-layer"></div>
-            <img id="padisah-char" src="assets/padisah.png" alt="Padişah">
+            <img id="padisah-char" src="assets/padisah.png?v=2" alt="Padişah">
             <div class="envoy-hotspot" id="hotspot-vezir" data-envoy="vezir">
-                <img class="envoy-char" src="assets/vezir.png" alt="Vezir">
+                <img class="envoy-char" src="assets/vezir.png?v=2" alt="Vezir">
             </div>
             <div class="envoy-hotspot" id="hotspot-serdar" data-envoy="serdar">
-                <img class="envoy-char" src="assets/serdar.png" alt="Serdar">
+                <img class="envoy-char" src="assets/serdar.png?v=2" alt="Serdar">
             </div>
             <div class="envoy-hotspot" id="hotspot-hazine" data-envoy="hazine">
-                <img class="envoy-char" src="assets/hazine.png" alt="Hazine Nazırı">
+                <img class="envoy-char" src="assets/hazine.png?v=2" alt="Hazine Nazırı">
             </div>
         </div>
     </div>
@@ -96,8 +96,8 @@
     </div>
 </div>
 
-<script src="data/events.js"></script>
-<script src="game.js"></script>
+<script src="data/events.js?v=2"></script>
+<script src="game.js?v=2"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
