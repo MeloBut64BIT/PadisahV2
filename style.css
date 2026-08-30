@@ -112,13 +112,17 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
-    background-image: url('assets/bg.jpg?v=2');
+    background-image: url('assets/salon.png?v=21');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
     transition: transform 0.3s ease-out;
     transform-origin: center center;
 }
+
+
 
 @keyframes breathe {
     0% { transform: scaleY(1) translateY(0); }
@@ -176,7 +180,7 @@ html, body {
     bottom: -2%;
     left: 50%;
     transform: translateX(-50%);
-    height: clamp(220px, 60dvh, 550px); /* Increased size relative to screen height */
+    height: clamp(230px, 64dvh, 600px); /* Fine-tuned size */
     width: auto;
     z-index: 10;
     pointer-events: none;
@@ -188,76 +192,83 @@ html, body {
 /* UI Overlay */
 #hud {
     position: absolute;
-    top: env(safe-area-inset-top, 10px);
-    left: 0;
-    width: 100%;
-    padding: clamp(5px, 2dvh, 10px);
-    box-sizing: border-box;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    z-index: 10;
+    top: 3%;
+    left: 2%;
+    right: 2%;
+    z-index: 20;
     pointer-events: none;
 }
 
 #day-counter {
-    background: rgba(0,0,0,0.8);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: var(--panel-bg);
     border: var(--border-style);
-    padding: clamp(4px, 1dvh, 8px) clamp(8px, 2dvw, 12px);
-    font-size: clamp(1rem, 4dvw, 1.2rem);
-    color: var(--gold-light);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    pointer-events: auto;
+    padding: 5px 15px;
+    font-size: clamp(1.2rem, 3dvw, 2rem);
+    border-radius: 5px;
 }
 
 #stats-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
     display: flex;
-    flex-direction: row;
     gap: 8px;
-    pointer-events: auto;
-    background: rgba(0,0,0,0.8);
+    flex-wrap: nowrap;
+}
+
+.stat-group {
+    background: var(--panel-bg);
     border: var(--border-style);
     padding: 6px 10px;
-}
-
-.stat-item {
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    width: clamp(50px, 12dvw, 80px);
+    min-width: 90px;
+    gap: 4px;
 }
 
-.stat-header {
+.stat-label {
     display: flex;
     justify-content: space-between;
-    font-size: clamp(0.8rem, 3.5dvw, 1rem);
+    font-size: clamp(0.9rem, 2dvw, 1.2rem);
+    white-space: nowrap;
+    gap: 5px;
 }
 
-.stat-bar-bg {
+.stat-bar {
     width: 100%;
-    height: 6px;
+    height: 8px;
     background: #222;
-    border: 1px solid #444;
+    border: 1px solid #000;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
 }
 
-.stat-bar-fill {
+.stat-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
     height: 100%;
     width: 50%;
-    transition: transform 0.3s ease-out;
-    transform-origin: left;
+    transition: width 0.3s, background-color 0.3s;
 }
+
 .stat-fill-halk { background-color: var(--green); }
 .stat-fill-asker { background-color: var(--crimson); }
 .stat-fill-gelir { background-color: var(--gold); }
-.stat-fill-din { background-color: #6B4A9E; }
+.stat-fill-din { background-color: #6C5B7B; }
 
 /* Envoy Hotspots and Chars */
 .envoy-hotspot {
     position: absolute;
-    width: clamp(100px, 18dvw, 200px);
-    height: clamp(180px, 35dvh, 380px);
+    top: 38%;
+    width: clamp(120px, 22dvw, 240px);
+    height: clamp(210px, 42dvh, 440px);
     transform: translate(-50%, -50%) scale(1);
     cursor: pointer;
     touch-action: manipulation;
@@ -315,9 +326,9 @@ html, body {
 .envoy-hotspot:active .envoy-char { filter: brightness(1.4); transform: scale(0.95); transition: transform 0.1s; }
 .envoy-hotspot:active::after { transform: translateX(-50%) scale(0.85); opacity: 0.8; }
 
-#hotspot-vezir { top: 33%; left: 35%; }
-#hotspot-serdar { top: 33%; left: 50%; }
-#hotspot-hazine { top: 33%; left: 65%; }
+#hotspot-vezir { top: 45%; left: 35%; }
+#hotspot-serdar { top: 45%; left: 50%; }
+#hotspot-hazine { top: 45%; left: 65%; }
 
 /* Dialog Panel */
 #dialog-panel {

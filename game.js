@@ -41,7 +41,8 @@ let currentEnvoyType = null;
 function updateBars() {
     ['halk', 'asker', 'gelir', 'din'].forEach(key => {
         stats[key] = Math.max(0, Math.min(100, stats[key]));
-        DOM[key].style.transform = `scaleX(${stats[key] / 100})`;
+        DOM[key].style.width = `${stats[key]}%`;
+        DOM[key].style.transform = 'none'; // reset just in case
         
         if (stats[key] > 70) DOM[key].style.backgroundColor = 'var(--green)';
         else if (stats[key] < 30) DOM[key].style.backgroundColor = 'var(--crimson)';
@@ -59,9 +60,9 @@ function updateBars() {
 
 
 const envoyOrigins = {
-    vezir: { x: 35, y: 25 },
-    serdar: { x: 50, y: 25 },
-    hazine: { x: 65, y: 25 }
+    vezir: { x: 35, y: 40 },
+    serdar: { x: 50, y: 40 },
+    hazine: { x: 65, y: 40 }
 };
 
 function getResponsiveZoomScale() {
@@ -150,11 +151,12 @@ function populateDialog(type) {
         
         let effectsHtml = '';
         const names = {halk: 'Halk', asker: 'Asker', gelir: 'Gelir', din: 'Din'};
+        const icons = { halk: '🌾', asker: '⚔️', gelir: '🪙', din: '🌙' };
         for (let k in opt.etkiler) {
             if (opt.etkiler[k] > 0) {
-                effectsHtml += `<span style="color:var(--green); margin-right:8px;">${names[k]} ▲</span>`;
+                effectsHtml += `<span style="color:#4A8C3A; margin-right:8px;">${icons[k]} ${names[k]} ▲</span>`;
             } else if (opt.etkiler[k] < 0) {
-                effectsHtml += `<span style="color:var(--crimson); margin-right:8px;">${names[k]} ▼</span>`;
+                effectsHtml += `<span style="color:#c93b3b; margin-right:8px;">${icons[k]} ${names[k]} ▼</span>`;
             }
         }
         

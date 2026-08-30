@@ -12,7 +12,7 @@
     <title>Padişah: Elçiler</title>
     <!-- Use font-display: swap for performance -->
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
 
@@ -30,39 +30,41 @@
     <div id="scene-container">
         <div id="scene-image">
             <div id="particle-layer"></div>
-            <img id="padisah-char" src="assets/padisah.png?v=2" alt="Padişah">
-            <div class="envoy-hotspot" id="hotspot-vezir" data-envoy="vezir">
-                <img class="envoy-char" src="assets/vezir.png?v=2" alt="Vezir">
+            
+            <!-- Padisah -->
+            <img id="padisah-char" src="assets/padisah.png?v=21" alt="Padişah" style="z-index: 20;">
+            
+            <!-- Envoys -->
+            <div class="envoy-hotspot" id="hotspot-vezir" data-envoy="vezir" style="z-index: 15;">
+                <img class="envoy-char" src="assets/vezir.png?v=21" alt="Vezir">
             </div>
-            <div class="envoy-hotspot" id="hotspot-serdar" data-envoy="serdar">
-                <img class="envoy-char" src="assets/serdar.png?v=2" alt="Serdar">
+            <div class="envoy-hotspot" id="hotspot-serdar" data-envoy="serdar" style="z-index: 15;">
+                <img class="envoy-char" src="assets/serdar.png?v=21" alt="Serdar">
             </div>
-            <div class="envoy-hotspot" id="hotspot-hazine" data-envoy="hazine">
-                <img class="envoy-char" src="assets/hazine.png?v=2" alt="Hazine Nazırı">
+            <div class="envoy-hotspot" id="hotspot-hazine" data-envoy="hazine" style="z-index: 15;">
+                <img class="envoy-char" src="assets/hazine.png?v=21" alt="Hazine Nazırı">
             </div>
         </div>
     </div>
 
     <div id="hud">
-        <div id="day-counter">
-            Gün <span id="day-val">1</span>
-        </div>
+        <div id="day-counter">Gün <span id="day-val">1</span></div>
         <div id="stats-container">
-            <div class="stat-item">
-                <div class="stat-header"><span>Halk</span><span id="val-halk">50</span></div>
-                <div class="stat-bar-bg"><div class="stat-bar-fill stat-fill-halk" id="bar-halk"></div></div>
+            <div class="stat-group">
+                <div class="stat-label"><span>🌾 Halk</span> <span id="val-halk">50</span></div>
+                <div class="stat-bar"><div class="stat-fill stat-fill-halk" id="bar-halk"></div></div>
             </div>
-            <div class="stat-item">
-                <div class="stat-header"><span>Asker</span><span id="val-asker">50</span></div>
-                <div class="stat-bar-bg"><div class="stat-bar-fill stat-fill-asker" id="bar-asker"></div></div>
+            <div class="stat-group">
+                <div class="stat-label"><span>⚔️ Asker</span> <span id="val-asker">50</span></div>
+                <div class="stat-bar"><div class="stat-fill stat-fill-asker" id="bar-asker"></div></div>
             </div>
-            <div class="stat-item">
-                <div class="stat-header"><span>Gelir</span><span id="val-gelir">50</span></div>
-                <div class="stat-bar-bg"><div class="stat-bar-fill stat-fill-gelir" id="bar-gelir"></div></div>
+            <div class="stat-group">
+                <div class="stat-label"><span>🪙 Gelir</span> <span id="val-gelir">50</span></div>
+                <div class="stat-bar"><div class="stat-fill stat-fill-gelir" id="bar-gelir"></div></div>
             </div>
-            <div class="stat-item">
-                <div class="stat-header"><span>Din</span><span id="val-din">50</span></div>
-                <div class="stat-bar-bg"><div class="stat-bar-fill stat-fill-din" id="bar-din"></div></div>
+            <div class="stat-group">
+                <div class="stat-label"><span>🌙 Din</span> <span id="val-din">50</span></div>
+                <div class="stat-bar"><div class="stat-fill stat-fill-din" id="bar-din"></div></div>
             </div>
         </div>
     </div>
@@ -96,8 +98,8 @@
     </div>
 </div>
 
-<script src="data/events.js?v=2"></script>
-<script src="game.js?v=2"></script>
+<script src="data/events.js?v=21"></script>
+<script src="game.js?v=21"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
