@@ -1,0 +1,16 @@
+{
+  "name": "Padisah: Elciler",
+  "short_name": "Padisah",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#0d0905",
+  "icons": [
+    {
+      "src": "assets/icon.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

@@ -1,0 +1,357 @@
+:root {
+    --bg-color: #0d0905;
+    --gold: #C9A24B;
+    --gold-dark: #7A5A24;
+    --gold-light: #F0D48A;
+    --crimson: #7A1E1E;
+    --green: #4A8C3A;
+    --text-light: #E4D6B0;
+    --dark-brown: #2B1D12;
+    --panel-bg: rgba(20, 14, 8, 0.95);
+    --border-style: 2px solid var(--gold);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-light);
+    font-family: 'VT323', monospace;
+    overflow: hidden;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    width: 100dvw;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-container {
+    width: 100dvw;
+    height: 100dvh;
+    position: relative;
+    background-color: var(--bg-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Background - Static image */
+#scene-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+#scene-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: calc(100vh * 1.5);
+    max-height: calc(100vw / 1.5);
+    background-image: url('assets/sahne.gif');
+    background-size: 100% 100%;
+    margin: 0 auto;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* UI Overlay */
+#hud {
+    position: absolute;
+    top: env(safe-area-inset-top, 10px);
+    left: 0;
+    width: 100%;
+    padding: clamp(5px, 2dvh, 10px);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#day-counter {
+    background: rgba(0,0,0,0.8);
+    border: var(--border-style);
+    padding: clamp(4px, 1dvh, 8px) clamp(8px, 2dvw, 12px);
+    font-size: clamp(1rem, 4dvw, 1.2rem);
+    color: var(--gold-light);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    pointer-events: auto;
+}
+
+#stats-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    pointer-events: auto;
+    background: rgba(0,0,0,0.8);
+    border: var(--border-style);
+    padding: 6px 10px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: clamp(50px, 12dvw, 80px);
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: clamp(0.8rem, 3.5dvw, 1rem);
+}
+
+.stat-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: #222;
+    border: 1px solid #444;
+}
+
+.stat-bar-fill {
+    height: 100%;
+    width: 50%;
+    transition: transform 0.3s ease-out;
+    transform-origin: left;
+}
+.stat-fill-halk { background-color: var(--green); }
+.stat-fill-asker { background-color: var(--crimson); }
+.stat-fill-gelir { background-color: var(--gold); }
+.stat-fill-din { background-color: #6B4A9E; }
+
+/* Hotspots mapped to sahne.gif coordinates */
+.envoy-hotspot {
+    position: absolute;
+    top: 28%;
+    width: 9%;
+    height: 25%;
+    border: 2px solid transparent;
+    border-radius: 15px;
+    cursor: pointer;
+    touch-action: manipulation;
+    z-index: 5;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.envoy-hotspot:active {
+    background: rgba(255, 215, 0, 0.15);
+    border-color: rgba(255, 215, 0, 0.8);
+}
+
+.envoy-hotspot.inactive {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+#hotspot-vezir { left: 34%; }
+#hotspot-serdar { left: 45.5%; }
+#hotspot-hazine { left: 57%; }
+
+/* Dialog Panel */
+#dialog-panel {
+    position: absolute;
+    bottom: clamp(10px, 3dvh, 20px);
+    left: 50%;
+    transform: translateX(-50%) translateY(150%);
+    width: 90%;
+    max-width: 500px;
+    background: var(--panel-bg);
+    border: var(--border-style);
+    border-radius: 12px;
+    padding: clamp(8px, 2dvh, 15px);
+    box-sizing: border-box;
+    z-index: 20;
+    transition: transform 0.3s cubic-bezier(0.1, 0.7, 0.1, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+#dialog-panel.active {
+    transform: translateX(-50%) translateY(0);
+}
+
+#dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--gold-dark);
+    padding-bottom: 3px;
+}
+
+#dialog-title {
+    margin: 0;
+    font-size: clamp(1rem, 4dvw, 1.2rem);
+    color: var(--gold);
+}
+
+#close-btn {
+    background: transparent;
+    border: 1px solid var(--gold-dark);
+    color: var(--text-light);
+    padding: 3px 8px;
+    font-family: 'VT323', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+#dialog-text {
+    font-size: clamp(0.95rem, 3.5dvw, 1.1rem);
+    line-height: 1.2;
+    margin-bottom: 5px;
+}
+
+#options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.option-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(#2B1D12, #1A1108);
+    border: 1px solid var(--gold-dark);
+    color: var(--text-light);
+    padding: clamp(6px, 1.5dvh, 8px) clamp(8px, 2dvw, 12px);
+    font-family: 'VT323', monospace;
+    font-size: clamp(0.9rem, 3.5dvw, 1rem);
+    text-align: left;
+    cursor: pointer;
+    border-radius: 5px;
+    touch-action: manipulation;
+}
+.option-btn:active {
+    background: #38271A;
+}
+
+/* Overlay for dimming background when dialog is open */
+#dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 40%, transparent 15%, rgba(0,0,0,0.85) 60%);
+    z-index: 15;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+#dark-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Navigation arrows inside dialog */
+#dialog-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+.nav-btn {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 3px 12px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+
+#notification {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(0,0,0,0.9);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 15px 25px;
+    text-align: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    font-size: clamp(1rem, 4dvw, 1.2rem);
+    width: fit-content;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+#notification.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+#game-over {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+}
+#game-over.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+#game-over h1 { color: var(--crimson); font-size: 3rem; margin-bottom: 10px; }
+#game-over h2 { color: var(--gold); font-size: 1.5rem; }
+#game-over p { font-size: 1.2rem; margin: 20px 0; }
+#restart-btn {
+    background: var(--gold-dark);
+    color: white;
+    border: 2px solid var(--gold);
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-family: 'VT323', monospace;
+    cursor: pointer;
+}
+
+#fade-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    z-index: 150;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease-in-out;
+}
+#fade-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+#fade-day-text {
+    color: var(--gold);
+    font-size: clamp(2.5rem, 8dvw, 4rem);
+    font-family: 'VT323', monospace;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    transition-delay: 0.3s;
+}
+#fade-overlay.active #fade-day-text {
+    opacity: 1;
+}

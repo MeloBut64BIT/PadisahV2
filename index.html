@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0d0905">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icon.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="assets/icon.jpg">
+    <title>Padişah: Elçiler</title>
+    <!-- Use font-display: swap for performance -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="game-container">
+    <div id="scene-container">
+        <div id="scene-image">
+            <div class="envoy-hotspot" id="hotspot-vezir" data-envoy="vezir"></div>
+            <div class="envoy-hotspot" id="hotspot-serdar" data-envoy="serdar"></div>
+            <div class="envoy-hotspot" id="hotspot-hazine" data-envoy="hazine"></div>
+        </div>
+    </div>
+
+    <div id="hud">
+        <div id="day-counter">
+            Gün <span id="day-val">1</span>
+        </div>
+        <div id="stats-container">
+            <div class="stat-item">
+                <div class="stat-header"><span>Halk</span><span id="val-halk">50</span></div>
+                <div class="stat-bar-bg"><div class="stat-bar-fill stat-fill-halk" id="bar-halk"></div></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-header"><span>Asker</span><span id="val-asker">50</span></div>
+                <div class="stat-bar-bg"><div class="stat-bar-fill stat-fill-asker" id="bar-asker"></div></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-header"><span>Gelir</span><span id="val-gelir">50</span></div>
+                <div class="stat-bar-bg"><div class="stat-bar-fill stat-fill-gelir" id="bar-gelir"></div></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-header"><span>Din</span><span id="val-din">50</span></div>
+                <div class="stat-bar-bg"><div class="stat-bar-fill stat-fill-din" id="bar-din"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dark-overlay"></div>
+
+    <div id="dialog-panel">
+        <div id="dialog-header">
+            <h2 id="dialog-title">Elçi</h2>
+            <button id="close-btn">X</button>
+        </div>
+        <div id="dialog-text">Mesele...</div>
+        <div id="options-container"></div>
+        <div id="dialog-nav">
+            <button class="nav-btn" id="nav-left">◀</button>
+            <button class="nav-btn" id="nav-right">▶</button>
+        </div>
+    </div>
+
+    <div id="notification">Sonuç...</div>
+
+    <div id="fade-overlay">
+        <h1 id="fade-day-text">Gün 2</h1>
+    </div>
+
+    <div id="game-over">
+        <h1 id="game-over-title">Oyun Bitti</h1>
+        <h2 id="game-over-subtitle">Unvan</h2>
+        <p id="game-over-text">Bitiş açıklaması...</p>
+        <button id="restart-btn">Yeniden Başla</button>
+    </div>
+</div>
+
+<script src="data/events.js"></script>
+<script src="game.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        console.log('Service Worker registered', reg);
+      }).catch(err => {
+        console.warn('Service Worker registration failed', err);
+      });
+    });
+  }
+</script>
+</body>
+</html>
