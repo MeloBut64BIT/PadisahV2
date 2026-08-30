@@ -17,11 +17,29 @@
 <body>
 
 <div id="game-container">
+<!-- Main Menu -->
+    <div id="main-menu">
+        <h1 id="game-title">Padişahım Çok Yaşa</h1>
+        <div class="menu-buttons">
+            <button id="btn-new-game" class="menu-btn">Yeni Oyun</button>
+            <button id="btn-continue" class="menu-btn">Devam Et</button>
+            <button id="btn-exit" class="menu-btn">Çıkış</button>
+        </div>
+    </div>
+
     <div id="scene-container">
         <div id="scene-image">
-            <div class="envoy-hotspot" id="hotspot-vezir" data-envoy="vezir"></div>
-            <div class="envoy-hotspot" id="hotspot-serdar" data-envoy="serdar"></div>
-            <div class="envoy-hotspot" id="hotspot-hazine" data-envoy="hazine"></div>
+            <div id="particle-layer"></div>
+            <img id="padisah-char" src="assets/padisah.png" alt="Padişah">
+            <div class="envoy-hotspot" id="hotspot-vezir" data-envoy="vezir">
+                <img class="envoy-char" src="assets/vezir.png" alt="Vezir">
+            </div>
+            <div class="envoy-hotspot" id="hotspot-serdar" data-envoy="serdar">
+                <img class="envoy-char" src="assets/serdar.png" alt="Serdar">
+            </div>
+            <div class="envoy-hotspot" id="hotspot-hazine" data-envoy="hazine">
+                <img class="envoy-char" src="assets/hazine.png" alt="Hazine Nazırı">
+            </div>
         </div>
     </div>
 

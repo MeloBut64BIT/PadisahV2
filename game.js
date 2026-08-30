@@ -36,21 +36,7 @@ let day = 1;
 let activeEnvoysToday = ['vezir', 'serdar', 'hazine'];
 let currentEnvoyType = null;
 
-function initGame() {
-    eventDatabase = window.eventDatabase || [];
-    stats = { halk: 50, asker: 50, gelir: 50, din: 50 };
-    day = 1;
-    activeEnvoysToday = ['vezir', 'serdar', 'hazine'];
-    availableEvents = JSON.parse(JSON.stringify(eventDatabase));
-    currentEnvoyType = null;
-    isProcessing = false;
-    
-    DOM.gameOver.classList.remove('active');
-    closePanel();
-    updateBars();
-    updateHotspotsVisuals();
-    DOM.day.innerText = day;
-}
+
 
 function updateBars() {
     ['halk', 'asker', 'gelir', 'din'].forEach(key => {
@@ -70,20 +56,12 @@ function updateBars() {
     });
 }
 
-function updateHotspotsVisuals() {
-    ['vezir', 'serdar', 'hazine'].forEach(type => {
-        if (activeEnvoysToday.includes(type)) {
-            DOM.hotspots[type].classList.remove('inactive');
-        } else {
-            DOM.hotspots[type].classList.add('inactive');
-        }
-    });
-}
+
 
 const envoyOrigins = {
-    vezir: { x: 38.5, y: 35 },
-    serdar: { x: 50.0, y: 35 },
-    hazine: { x: 61.5, y: 35 }
+    vezir: { x: 35, y: 25 },
+    serdar: { x: 50, y: 25 },
+    hazine: { x: 65, y: 25 }
 };
 
 function getResponsiveZoomScale() {
@@ -189,64 +167,80 @@ function populateDialog(type) {
 function handleDecision(eventData, option) {
     isProcessing = true;
     
-    // Remove event from pool by ID or metin
+    // Remove event from pool
     const globalIndex = availableEvents.findIndex(e => e.id === eventData.id || e.metin === eventData.metin);
-    if (globalIndex > -1) {
-        availableEvents.splice(globalIndex, 1);
-    }
+    if (globalIndex > -1) availableEvents.splice(globalIndex, 1);
 
     const actedEnvoy = currentEnvoyType;
     closePanel();
     
-    // Immediately mark envoy as inactive so they can't be clicked again during the notification
+    // Remove envoy and make them walk out
     activeEnvoysToday = activeEnvoysToday.filter(e => e !== actedEnvoy);
-    updateHotspotsVisuals();
+    const hotspot = document.getElementById(`hotspot-${actedEnvoy}`);
+    hotspot.classList.add('at-door'); // Triggers walk out animation
     
-    // Apply stats
-    for (let key in option.etkiler) {
-        if (option.etkiler[key] !== 0) {
-            stats[key] += option.etkiler[key];
+    // Process stat changes
+    if (option.etkiler) {
+        for (let stat in option.etkiler) {
+            stats[stat] += option.etkiler[stat];
+            if (stats[stat] > 100) stats[stat] = 100;
+            if (stats[stat] < 0) stats[stat] = 0;
         }
     }
     updateBars();
+    saveProgress();
 
     // Show result
     DOM.notification.innerText = option.sonuc_metni || option.sonuc;
     DOM.notification.classList.add('active');
 
-    // Trigger game over check immediately after stats update
     if (checkGameOver()) {
         DOM.notification.classList.remove('active');
         isProcessing = false;
         return;
     }
 
+    // Wait for result notification to complete
     setTimeout(() => {
         DOM.notification.classList.remove('active');
         
         if (activeEnvoysToday.length === 0) {
-            // Day transition with cinematic fade
+            // Day ended
             setTimeout(() => {
                 const fadeOverlay = document.getElementById('fade-overlay');
                 const fadeText = document.getElementById('fade-day-text');
-                
                 day++;
                 fadeText.innerText = `Gün ${day}`;
-                fadeOverlay.classList.add('active');
+                fadeOverlay.classList.add('active'); // Fade to black
                 
                 setTimeout(() => {
-                    // Update stats while screen is black
                     DOM.day.innerText = day;
                     activeEnvoysToday = ['vezir', 'serdar', 'hazine'];
-                    updateHotspotsVisuals();
                     
-                    // Fade back in
+                    saveProgress(); // Save at the start of the new day
+                    
+                    // Reset envoys to door instantly while screen is black
+                    const allHotspots = document.querySelectorAll('.envoy-hotspot');
+                    allHotspots.forEach(h => {
+                        h.style.transition = 'none'; // Disable transition to teleport
+                        h.classList.add('at-door');
+                    });
+                    
+                    // Force reflow
+                    void document.body.offsetHeight;
+                    
+                    // Fade screen back in
                     fadeOverlay.classList.remove('active');
                     
                     setTimeout(() => {
+                        // Envoys walk into the room
+                        allHotspots.forEach(h => {
+                            h.style.transition = ''; // Restore CSS transition
+                            h.classList.remove('at-door');
+                        });
                         isProcessing = false;
-                    }, 1000); // Wait for fade transition to finish
-                }, 2000); // Screen stays black for 2 seconds
+                    }, 800); // Wait a bit after fade out starts before walking in
+                }, 2000); 
             }, 500); 
         } else {
             isProcessing = false;
@@ -307,5 +301,157 @@ async function lockLandscape() {
 document.addEventListener('click', lockLandscape, { once: true });
 document.addEventListener('touchstart', lockLandscape, { once: true });
 
-// Start
-initGame();
+// --- Atmospheric Particles ---
+function spawnParticles() {
+    const layer = document.getElementById('particle-layer');
+    if (!layer) return;
+
+    // Spawn Smoke at the incense burners (approx bottom left/right of the carpet)
+    setInterval(() => {
+        const createSmoke = (leftPos) => {
+            let smoke = document.createElement('div');
+            smoke.className = 'pixel-smoke';
+            // Randomize position slightly around the burner
+            smoke.style.left = (leftPos + (Math.random() * 2 - 1)) + '%';
+            smoke.style.top = (85 + (Math.random() * 2 - 1)) + '%';
+            smoke.style.animationDuration = (2.5 + Math.random()) + 's';
+            layer.appendChild(smoke);
+            setTimeout(() => smoke.remove(), 3500);
+        };
+        // The two golden censers are around 15% and 85% width in the new background
+        createSmoke(18);
+        createSmoke(82);
+    }, 400);
+
+    // Spawn Gold Dust randomly in the room
+    setInterval(() => {
+        let dust = document.createElement('div');
+        dust.className = 'pixel-dust';
+        dust.style.left = (10 + Math.random() * 80) + '%';
+        dust.style.top = (30 + Math.random() * 60) + '%';
+        dust.style.animationDuration = (4 + Math.random() * 4) + 's';
+        layer.appendChild(dust);
+        setTimeout(() => dust.remove(), 8000);
+    }, 300);
+}
+spawnParticles();
+
+// --- Main Menu Logic ---
+const DOM_MENU = {
+    menu: document.getElementById('main-menu'),
+    btnNew: document.getElementById('btn-new-game'),
+    btnContinue: document.getElementById('btn-continue'),
+    btnExit: document.getElementById('btn-exit')
+};
+
+function saveProgress() {
+    const data = {
+        day,
+        stats,
+        availableEvents,
+        activeEnvoysToday
+    };
+    localStorage.setItem('padisah_save', JSON.stringify(data));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem('padisah_save');
+    if (saved) {
+        const data = JSON.parse(saved);
+        day = data.day;
+        stats = data.stats;
+        availableEvents = data.availableEvents;
+        activeEnvoysToday = data.activeEnvoysToday;
+    }
+}
+
+function initMenu() {
+    const saveExists = !!localStorage.getItem('padisah_save');
+    if (!saveExists) {
+        DOM_MENU.btnContinue.disabled = true;
+    }
+
+    DOM_MENU.btnNew.addEventListener('click', () => {
+        localStorage.removeItem('padisah_save');
+        startGameFromMenu(true);
+    });
+
+    DOM_MENU.btnContinue.addEventListener('click', () => {
+        startGameFromMenu(false);
+    });
+
+    DOM_MENU.btnExit.addEventListener('click', () => {
+        window.close();
+        if (!window.closed) alert('Oyundan çıkmak için sekmeyi kapatabilirsiniz.');
+    });
+}
+
+function startGameFromMenu(isNewGame) {
+    const fadeOverlay = document.getElementById('fade-overlay');
+    const fadeText = document.getElementById('fade-day-text');
+    
+    if (isNewGame) {
+        fadeText.innerText = 'Gün 1';
+    } else {
+        const saved = localStorage.getItem('padisah_save');
+        if (saved) {
+            const data = JSON.parse(saved);
+            fadeText.innerText = `Gün ${data.day}`;
+        }
+    }
+
+    fadeOverlay.classList.add('active');
+    
+    setTimeout(() => {
+        DOM_MENU.menu.classList.add('hidden');
+        
+        initGame(isNewGame);
+        
+        setTimeout(() => {
+            fadeOverlay.classList.remove('active');
+        }, 500);
+    }, 1000);
+}
+
+function initGame(isNewGame) {
+    if (isNewGame) {
+        eventDatabase = window.eventDatabase || [];
+        stats = { halk: 50, asker: 50, gelir: 50, din: 50 };
+        day = 1;
+        activeEnvoysToday = ['vezir', 'serdar', 'hazine'];
+        availableEvents = JSON.parse(JSON.stringify(eventDatabase));
+        saveProgress(); // Initial save
+    } else {
+        loadProgress();
+    }
+    
+    currentEnvoyType = null;
+    isProcessing = false;
+    
+    DOM.gameOver.classList.remove('active');
+    closePanel();
+    updateBars();
+    DOM.day.innerText = day;
+    
+    // Start with envoys walking in
+    const allHotspots = document.querySelectorAll('.envoy-hotspot');
+    allHotspots.forEach(h => {
+        h.style.transition = 'none';
+        h.classList.add('at-door');
+    });
+    
+    void document.body.offsetHeight; // Force reflow
+    
+    setTimeout(() => {
+        allHotspots.forEach(h => {
+            h.style.transition = ''; // Restore CSS transition
+            // Only envoys that are still active today will walk in
+            if (activeEnvoysToday.includes(h.dataset.envoy)) {
+                h.classList.remove('at-door');
+            }
+        });
+    }, 500);
+}
+
+// Start Menu
+initMenu();
