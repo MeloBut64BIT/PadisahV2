@@ -171,7 +171,8 @@ html, body {
     bottom: -2%;
     left: 50%;
     transform: translateX(-50%);
-    width: clamp(300px, 50dvw, 550px);
+    height: clamp(200px, 50dvh, 450px); /* Binds strictly to screen height */
+    width: auto;
     z-index: 10;
     pointer-events: none;
     /* Optional slight breathe for padisah */
@@ -292,8 +293,9 @@ html, body {
 }
 
 .envoy-char {
-    width: 100%;
-    height: auto;
+    height: 100%;
+    width: auto;
+    max-width: 100%;
     object-fit: contain;
     animation: breathe 3s infinite ease-in-out;
     transform-origin: bottom center;
