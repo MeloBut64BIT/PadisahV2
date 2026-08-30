@@ -171,7 +171,7 @@ html, body {
     bottom: -2%;
     left: 50%;
     transform: translateX(-50%);
-    height: clamp(200px, 50dvh, 450px); /* Binds strictly to screen height */
+    height: clamp(220px, 60dvh, 550px); /* Increased size relative to screen height */
     width: auto;
     z-index: 10;
     pointer-events: none;
